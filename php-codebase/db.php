@@ -20,10 +20,6 @@ function getDBConnection() {
             PDO::ATTR_EMULATE_PREPARES => false,
         ];
 
-        if (defined('PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT')) {
-            $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
-        }
-
         $conn = new PDO($dsn, DB_USER, DB_PASS, $options);
     } catch (PDOException $e) {
         error_log("Database connection failure: " . $e->getMessage());

@@ -7,6 +7,7 @@ define('DB_PASS', 'AVNS_CkqJP70s48bHC_GQ6rI');
 
 function getDBConnection() {
     static $conn = null;
+
     if ($conn !== null) {
         return $conn;
     }
@@ -20,11 +21,14 @@ function getDBConnection() {
             PDO::ATTR_EMULATE_PREPARES => false,
         ];
 
+        if (defined('PDO::MYSQL_ATTR_SSL_CA') && file_exists(__DIR__ . '/ca.pem')) {
+            $options[PDO::MYSQL_ATTR_SSL_CA] = __DIR__ . '/ca.pem';
+        }
+
         $conn = new PDO($dsn, DB_USER, DB_PASS, $options);
+        return $conn;
     } catch (PDOException $e) {
         error_log("Database connection failure: " . $e->getMessage());
-        return null;
+        die("Database error: " . $e->getMessage());
     }
-
-    return $conn;
 }
